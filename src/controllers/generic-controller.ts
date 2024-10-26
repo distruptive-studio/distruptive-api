@@ -17,8 +17,12 @@ export abstract class BaseController<T> {
      * @param {Record} data -Data to send in the response.
      * @param {number} statusCode -HTTP status code.
      */
-    protected sendSuccess({ res, data, statusCode = 200 }: ISuccess<T>) {
-        res.status(statusCode).json({ data });
+    protected sendSuccess({ res, data, message, statusCode = 200 }: ISuccess<T> & { message?: string }) {
+        res.status(statusCode).json({
+            success: true,
+            message,
+            data,
+        });
     }
 
     /**
@@ -30,7 +34,11 @@ export abstract class BaseController<T> {
      */
     protected handleError({ res, error, message, statusCode = 400 }: IError) {
         const msg = message || error.message || "Error inesperado";
-        res.status(statusCode).json({ error, message: msg });
+        res.status(statusCode).json({
+            success: false,
+            message: msg,
+            error,
+        });
     }
 
 }

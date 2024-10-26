@@ -3,6 +3,9 @@ import { dbConnection } from './db';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
+import { API, ENDPOINTS } from './endpoints';
+
+import AuthRouter from '../routes/auth-routes'
 
 export class Server {
     private static instance: Server;
@@ -17,10 +20,14 @@ export class Server {
     private constructor() {
         this.app = express();
         this.port = process.env.PORT || 3000;
-        this.path = {};
+
+        this.path = {
+            auth: `${API}${ENDPOINTS.AUTH.BASE}`,
+        };
 
         this.connectDB();
         this.middlewares();
+        this.routes()
     }
 
     /**
@@ -69,6 +76,11 @@ export class Server {
         //         createParentPath: true,
         //     })
         // );
+    }
+
+    routes() {
+        this.app.use(this.path.auth, AuthRouter)
+        console.log("available routes: ", this.path);
     }
 
     /**
