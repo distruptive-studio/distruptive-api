@@ -13,7 +13,7 @@ export type CredentialDto = {
 
 export type LoginReqDto = {
     body: {
-        email: string;
+        identifier: string;
         password: string;
     }
 } & Request
