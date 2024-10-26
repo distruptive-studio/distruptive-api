@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { ITopic } from "./ITopic";
 
 /**
  * Enum representing the different types of users in the system.
@@ -52,4 +53,11 @@ export interface IUser extends Document {
      * @type {string}
      */
     token: string;
+
+    /**
+      * Reference to the topic that defines permissions for this user.
+      * This field may be null or undefined if no topic is assigned.
+      * @type {ITopic}
+      */
+    topic: ITopic;
 }

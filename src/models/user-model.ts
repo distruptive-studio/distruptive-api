@@ -7,7 +7,7 @@ import { IUser } from "../interfaces/IUser";
  * 
  * @type {Schema<IUser>}
  */
-const userSchema = new Schema<IUser>({
+const UserSchema = new Schema<IUser>({
     /**
      * The username of the user, which is required and must be unique.
      * @type {String}
@@ -37,6 +37,8 @@ const userSchema = new Schema<IUser>({
      * @type {String}
      */
     token: { type: String, required: false },
+
+    topic: { type: Schema.Types.ObjectId, ref: 'Topic', required: false }
 });
 
 /**
@@ -44,4 +46,12 @@ const userSchema = new Schema<IUser>({
  * 
  * @type {mongoose.Model<IUser>}
  */
-export default mongoose.model<IUser>('User', userSchema);
+
+UserSchema.methods.toJSON = function () {
+    let user = this;
+    let userObject = user.toObject();
+    delete userObject.password;
+    delete userObject.token;
+    return userObject;
+};
+export default mongoose.model<IUser>('User', UserSchema);
