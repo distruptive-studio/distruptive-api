@@ -12,7 +12,17 @@ const UserSchema = new Schema<IUser>({
      * The username of the user, which is required and must be unique.
      * @type {String}
      */
-    username: { type: String, unique: true, required: true },
+    username: {
+        type: String,
+        unique: true,
+        required: true,
+        validate: {
+            validator: function (v: string) {
+                return !/\s/.test(v); // Verifica que no haya espacios en blanco
+            },
+            message: props => `${props.value} cannot contain spaces!`
+        }
+    },
 
     /**
      * The email address of the user, which is required and must be unique.

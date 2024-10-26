@@ -1,11 +1,12 @@
 import { Response } from 'express';
 import { IUser } from "../interfaces/IUser";
 import { IAuthServices, AuthServicesInstance } from "../services/auth-services";
-import { CreateUserReqDto } from "../types/auth-types";
+import { CreateUserReqDto, LoginReqDto } from "../types/auth-types";
 import GenericController from "./generic-controller";
 
 abstract class IAuthController extends GenericController<IUser> {
     abstract register(req: CreateUserReqDto, res: Response): Promise<void>;
+    abstract login(req: LoginReqDto, res: Response): Promise<void>;
 }
 
 class AuthController extends IAuthController {
@@ -30,6 +31,7 @@ class AuthController extends IAuthController {
     register = async (req: CreateUserReqDto, res: Response) => {
         try {
             const body: IUser = req.body;
+
             const newUser = await this._service.register(body);
             this.sendSuccess({
                 res,
@@ -48,6 +50,22 @@ class AuthController extends IAuthController {
             this.handleError({ res, error });
         }
     };
+
+    login = async (req: LoginReqDto, res: Response) => {
+        try {
+            const { user, password } = req.body
+
+            const response = await this._service.login({ user, password });
+
+            this.sendSuccess({
+                res,
+                data: { user: response.user, token: response.token },
+            });
+
+        } catch (error: any) {
+            this.handleError({ res, error });
+        }
+    }
 }
 
 export const AuthControllerInstance = AuthController.getInstance();
