@@ -4,7 +4,10 @@ import jwt from 'jsonwebtoken'
 import { IUser } from "../interfaces/IUser";
 import GenericService from "./generic-service";
 import UserModel from "../models/user-model";
+import topicModel from '../models/topic-model';
 import bcrypt from "bcryptjs";
+import { ObjectId } from 'mongoose';
+import { ITopic } from '../interfaces/ITopic';
 
 export abstract class IAuthServices extends GenericService<IUser> {
     abstract register(user: IUser): Promise<IUser>;
@@ -26,14 +29,37 @@ class AuthServices extends IAuthServices {
     }
 
     async register(user: IUser): Promise<IUser> {
-        const { password, email, ...rest } = user;
+        const { password, email, topic, ...rest } = user;
+
+        let topicId: ObjectId;
+        switch (rest.type) {
+            case 'lector':
+                const lectorTopic = await topicModel.findOne<ITopic>({ "permission.availableText": true });
+                topicId = lectorTopic?._id as ObjectId;
+                break;
+            case 'creator':
+                const creadorTopic = await topicModel.findOne<ITopic>({ "permission.availableVideo": true });
+                topicId = creadorTopic?._id as ObjectId
+                break;
+            case 'admin':
+                const adminTopic = await topicModel.findOne<ITopic>({ "permission.availableImage": true });
+                topicId = adminTopic?._id as ObjectId;
+                break;
+            default:
+                const defaultTopic = await topicModel.findOne<ITopic>({ "permission.availableText": true });
+                topicId = defaultTopic?._id as ObjectId;
+                break;
+        }
+
+
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const userRegistered = await this.create({
             password: hashedPassword,
             email: email.toLowerCase(),
-            ...rest,
+            topic: topicId,
+            ...rest
         });
 
         return userRegistered;
@@ -46,7 +72,7 @@ class AuthServices extends IAuthServices {
 
             const userValidate = await this._verifyUser({ user, password });
 
-            const token = jwt.sign({ user }, 'HS256', { expiresIn: "672h" });
+            const token = jwt.sign({ user: userValidate }, 'HS256', { expiresIn: "672h" });
 
             const userUpdatingToken = await this.update(userValidate._id, { token })
 

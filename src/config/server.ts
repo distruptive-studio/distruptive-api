@@ -6,6 +6,12 @@ import helmet from 'helmet';
 import { API, ENDPOINTS } from './endpoints';
 
 import AuthRouter from '../routes/auth-routes'
+import UserRouter from '../routes/users-routes';
+import ContentRouter from '../routes/content-routes'
+
+
+import { validToken } from '../middlewares/valid-token';
+import { validUserAdmin } from '../middlewares/valid-admin';
 
 export class Server {
     private static instance: Server;
@@ -23,6 +29,8 @@ export class Server {
 
         this.path = {
             auth: `${API}${ENDPOINTS.AUTH.BASE}`,
+            user: `${API}${ENDPOINTS.USERS.BASE}`,
+            content: `${API}${ENDPOINTS.CONTENTS.BASE}`
         };
 
         this.connectDB();
@@ -80,6 +88,8 @@ export class Server {
 
     routes() {
         this.app.use(this.path.auth, AuthRouter)
+        this.app.use(this.path.user, validToken, validUserAdmin, UserRouter)
+        this.app.use(this.path.content, validToken, ContentRouter)
         console.log("available routes: ", this.path);
     }
 

@@ -1,3 +1,4 @@
+import { ObjectId, Document } from "mongoose";
 import { TYPE_CONTENT } from "./ICategory";
 
 /**
@@ -29,7 +30,7 @@ export interface IContent extends Document {
      * The creator of the content item.
      * @type {string}
      */
-    creator: string;
+    creator: ObjectId;
 
     /**
      * The URL of the content item, applicable only for images or videos.
