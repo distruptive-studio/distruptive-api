@@ -23,18 +23,18 @@ export interface ITopic extends Document {
          * Indicates if image validation is allowed.
          * @type {boolean}
          */
-        validateImagen: boolean;
+        availableImage: boolean;
 
         /**
          * Indicates if video validation is allowed.
          * @type {boolean}
          */
-        validateVideo: boolean;
+        availableVideo: boolean;
 
         /**
          * Indicates if text validation is allowed.
          * @type {boolean}
          */
-        validateTexto: boolean;
+        availableText: boolean;
     };
 }

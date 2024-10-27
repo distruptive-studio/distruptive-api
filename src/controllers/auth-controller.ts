@@ -33,19 +33,18 @@ class AuthController extends IAuthController {
             const body: IUser = req.body;
 
             const newUser = await this._service.register(body);
-            this.sendSuccess({
-                res,
-                data: newUser,
-                message: 'Usuario Registrado',
-                statusCode: 201,
-            });
+
+            this.sendSuccess({ res, data: newUser, message: 'Usuario Registrado', statusCode: 201, });
+
         } catch (error: any) {
+
             if (error.code === 11000) {
-                return this.handleError({
+                this.handleError({
                     res,
-                    error: { message: 'Usuario ya existe' },
+                    error: { message: error.keyPattern.email ? 'email exist' : 'usernmane exist' },
                     statusCode: 400,
                 });
+                return
             }
             this.handleError({ res, error });
         }

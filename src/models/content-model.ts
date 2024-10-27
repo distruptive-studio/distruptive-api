@@ -30,7 +30,7 @@ const contentSchema = new Schema<IContent>({
      * The creator of the content item, which is required.
      * @type {String}
      */
-    creator: { type: String, required: true },
+    creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 
     /**
      * The URL of the content item, applicable for images or videos.

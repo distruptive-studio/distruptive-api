@@ -18,9 +18,9 @@ const topicSchema = new Schema<ITopic>({
      * @type {Object}
      */
     permission: {
-        permiteImagen: { type: Boolean, default: false },
-        permiteVideo: { type: Boolean, default: false },
-        permiteTexto: { type: Boolean, default: false }
+        availableImage: { type: Boolean, default: false },
+        availableVideo: { type: Boolean, default: false },
+        availableText: { type: Boolean, default: false }
     }
 });
 

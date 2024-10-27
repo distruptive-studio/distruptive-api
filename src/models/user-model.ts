@@ -34,7 +34,7 @@ const UserSchema = new Schema<IUser>({
      * The type of user, must be one of the specified enum values.
      * @type {String}
      */
-    type: { type: String, enum: ['lector', 'creador', 'admin'], required: true },
+    type: { type: String, enum: ['lector', 'creator', 'admin'], required: true },
 
     /**
      * The password of the user, which is required.
@@ -48,7 +48,6 @@ const UserSchema = new Schema<IUser>({
      */
     token: { type: String, required: false },
 
-    topic: { type: Schema.Types.ObjectId, ref: 'Topic', required: false }
 });
 
 /**
